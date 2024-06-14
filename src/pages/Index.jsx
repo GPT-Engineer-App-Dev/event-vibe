@@ -1,8 +1,10 @@
 import { Container, Text, VStack, Heading, Box, Button, HStack, IconButton } from "@chakra-ui/react";
+import { useSupabaseAuth } from "../integrations/supabase/auth.jsx";
 import { FaCalendarPlus, FaListAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const { session, logout } = useSupabaseAuth();
   const navigate = useNavigate();
 
   return (
@@ -18,6 +20,15 @@ const Index = () => {
             View Events
           </Button>
         </HStack>
+      {session ? (
+          <Button colorScheme="teal" size="lg" onClick={logout}>
+            Logout
+          </Button>
+        ) : (
+          <Button colorScheme="teal" size="lg" onClick={() => navigate("/login")}>
+            Login
+          </Button>
+        )}
       </VStack>
     </Container>
   );
