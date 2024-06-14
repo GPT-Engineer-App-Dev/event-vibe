@@ -165,3 +165,44 @@ export const useDeleteVenue = () => {
         },
     });
 };
+
+// Hooks for jobs table
+export const useJobs = () => useQuery({
+    queryKey: ['jobs'],
+    queryFn: () => fromSupabase(supabase.from('jobs').select('*')),
+});
+
+export const useJob = (id) => useQuery({
+    queryKey: ['jobs', id],
+    queryFn: () => fromSupabase(supabase.from('jobs').select('*').eq('id', id).single()),
+});
+
+export const useAddJob = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newJob) => fromSupabase(supabase.from('jobs').insert([newJob])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('jobs');
+        },
+    });
+};
+
+export const useUpdateJob = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedJob) => fromSupabase(supabase.from('jobs').update(updatedJob).eq('id', updatedJob.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('jobs');
+        },
+    });
+};
+
+export const useDeleteJob = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('jobs').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('jobs');
+        },
+    });
+};

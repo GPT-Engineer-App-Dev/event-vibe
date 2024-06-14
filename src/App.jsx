@@ -5,6 +5,9 @@ import CreateEvent from "./pages/CreateEvent.jsx";
 import Events from "./pages/Events.jsx";
 import EditEvent from "./pages/EditEvent.jsx";
 import EventDetails from "./pages/EventDetails.jsx";
+import Jobs from "./pages/Jobs.jsx";
+import CreateJob from "./pages/CreateJob.jsx";
+import EditJob from "./pages/EditJob.jsx";
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
         <Route path="/edit/:id" element={<EditEvent />} />
         <Route path="/event/:id" element={<EventDetails />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/create-job" element={<CreateJob />} />
+        <Route path="/edit-job/:id" element={<EditJob />} />
       </Routes>
     </Router>
   );
