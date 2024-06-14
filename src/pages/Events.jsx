@@ -14,7 +14,7 @@ const Events = ({ events, deleteEvent }) => {
           <Text>No events available. Create one!</Text>
         ) : (
           events.map((event) => (
-            <Box key={event.id} p={4} borderWidth="1px" borderRadius="lg" width="100%">
+            <Box key={event.id} p={4} borderWidth="1px" borderRadius="lg" width="100%" onClick={() => navigate(`/event/${event.id}`)} cursor="pointer">
               <HStack justifyContent="space-between">
                 <VStack align="start">
                   <Text fontSize="xl" fontWeight="bold">{event.title}</Text>
