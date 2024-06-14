@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEvents, useDeleteEvent } from "../integrations/supabase/index.js";
 import { Container, Heading, VStack, Box, Text, HStack, IconButton, Button } from "@chakra-ui/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const Events = ({ events, deleteEvent }) => {
-  const navigate = useNavigate();
+const Events = () => {
+  const { data: events, isLoading } = useEvents();
+  const deleteEventMutation = useDeleteEvent();
+
+  const handleDelete = async (id) => {
+    await deleteEventMutation.mutateAsync(id);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container centerContent>
@@ -17,13 +26,13 @@ const Events = ({ events, deleteEvent }) => {
             <Box key={event.id} p={4} borderWidth="1px" borderRadius="lg" width="100%" onClick={() => navigate(`/event/${event.id}`)} cursor="pointer">
               <HStack justifyContent="space-between">
                 <VStack align="start">
-                  <Text fontSize="xl" fontWeight="bold">{event.title}</Text>
+                  <Text fontSize="xl" fontWeight="bold">{event.name}</Text>
                   <Text>{event.description}</Text>
                   <Text>{event.date}</Text>
                 </VStack>
                 <HStack>
                   <IconButton icon={<FaEdit />} onClick={() => navigate(`/edit/${event.id}`)} />
-                  <IconButton icon={<FaTrash />} onClick={() => deleteEvent(event.id)} />
+                  <IconButton icon={<FaTrash />} onClick={() => handleDelete(event.id)} />
                 </HStack>
               </HStack>
             </Box>

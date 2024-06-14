@@ -1,10 +1,15 @@
 import { Container, Heading, VStack, Text, Button } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useEvent } from "../integrations/supabase/index.js";
 
-const EventDetails = ({ events }) => {
+const EventDetails = () => {
   const { id } = useParams();
-  const event = events.find((event) => event.id === id);
+  const { data: event, isLoading } = useEvent(id);
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (!event) {
     return (
@@ -18,7 +23,7 @@ const EventDetails = ({ events }) => {
   return (
     <Container centerContent>
       <VStack spacing={4} width="100%" maxW="md">
-        <Heading as="h2" size="xl">{event.title}</Heading>
+        <Heading as="h2" size="xl">{event.name}</Heading>
         <Text>{event.description}</Text>
         <Text>{event.date}</Text>
         <Button colorScheme="teal" onClick={() => navigate("/events")}>Back to Events</Button>
