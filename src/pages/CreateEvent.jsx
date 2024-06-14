@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { Container, Heading, VStack, FormControl, FormLabel, Input, Button, Textarea } from "@chakra-ui/react";
-import { v4 as uuidv4 } from "uuid";
+import { useAddEvent } from "../integrations/supabase/index.js";
 import { useNavigate } from "react-router-dom";
 
-const CreateEvent = ({ addEvent }) => {
+const CreateEvent = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const addEventMutation = useAddEvent();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newEvent = {
-      id: uuidv4(),
-      title,
+      name: title,
       description,
       date,
     };
-    addEvent(newEvent);
+    await addEventMutation.mutateAsync(newEvent);
     navigate("/events");
   };
 

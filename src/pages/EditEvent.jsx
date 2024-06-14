@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import { Container, Heading, VStack, FormControl, FormLabel, Input, Button, Textarea } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEvent, useUpdateEvent } from "../integrations/supabase/index.js";
 
-const EditEvent = ({ events, updateEvent }) => {
+const EditEvent = () => {
   const { id } = useParams();
-  const event = events.find((event) => event.id === id);
-  const [title, setTitle] = useState(event ? event.title : "");
-  const [description, setDescription] = useState(event ? event.description : "");
-  const [date, setDate] = useState(event ? event.date : "");
+  const { data: event, isLoading } = useEvent(id);
+  const updateEventMutation = useUpdateEvent();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!event) {
-      navigate("/events");
+    if (event) {
+      setTitle(event.name);
+      setDescription(event.description);
+      setDate(event.date);
     }
-  }, [event, navigate]);
+  }, [event]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedEvent = {
       id,
@@ -24,9 +28,13 @@ const EditEvent = ({ events, updateEvent }) => {
       description,
       date,
     };
-    updateEvent(updatedEvent);
+    await updateEventMutation.mutateAsync(updatedEvent);
     navigate("/events");
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container centerContent>
